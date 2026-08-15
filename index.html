@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Lab & Topology Simulator — Angga</title>
+  <meta name="description" content="Interactive Network Topology & Packet Simulator by Angga (Network Engineer & NOC Specialist). Simulate ICMP Ping, Link Failover, VLAN Tagging, and Firewall Filters.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d13;
+      --surface: #111822;
+      --surface-hover: #172230;
+      --border: #1e2d3d;
+      --border-light: #2c3e50;
+      --accent: #a3e635;
+      --accent-glow: rgba(163, 230, 53, 0.25);
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --purple: #c084fc;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --transition: all 0.2s ease;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* BACKGROUND GRID */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* HEADER / NAVBAR */
+    .header {
+      position: relative;
+      z-index: 10;
+      background: rgba(17, 24, 34, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .brand__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(163,230,53,0.2), rgba(56,189,248,0.2));
+      border: 1px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .brand__title { font-weight: 700; font-size: 15px; letter-spacing: -0.3px; }
+    .brand__subtitle { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .nav-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--surface-hover);
+    }
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px;
+      cursor: pointer;
+    }
+    .lang-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      font-family: var(--mono);
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #090d13;
+    }
+
+    /* MAIN CONTAINER */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* TOOLBAR */
+    .toolbar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+    }
+    .action-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .action-btn--primary {
+      background: var(--accent);
+      color: #090d13;
+      border-color: var(--accent);
+    }
+    .action-btn--primary:hover {
+      background: #bbf246;
+      border-color: #bbf246;
+      color: #090d13;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+    .action-btn--danger {
+      border-color: rgba(239,68,68,0.4);
+      color: #f87171;
+    }
+    .action-btn--danger:hover {
+      background: rgba(239,68,68,0.15);
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .action-btn--info {
+      border-color: rgba(56,189,248,0.4);
+      color: var(--cyan);
+    }
+    .action-btn--info:hover {
+      background: rgba(56,189,248,0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 20px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+      animation: pulse 1.5s infinite;
+    }
+    .status-dot.failover { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+    .status-dot.down { background: var(--red); box-shadow: 0 0 10px var(--red); }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(1.2);} }
+
+    /* WORKSPACE GRID */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    /* TOPOLOGY CANVAS */
+    .canvas-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .canvas-header {
+      padding: 12px 18px;
+      background: rgba(0,0,0,0.25);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .canvas-body {
+      background: #080c11;
+      position: relative;
+      flex: 1;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .topology-svg {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      display: block;
+    }
+
+    /* SVG ELEMENTS */
+    .link-line {
+      stroke: rgba(255,255,255,0.18);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      transition: stroke 0.3s ease;
+    }
+    .link-line.active { stroke: #22c55e; stroke-width: 3; }
+    .link-line.backup { stroke: var(--amber); stroke-dasharray: 6 4; }
+    .link-line.down { stroke: var(--red); stroke-dasharray: 4 4; opacity: 0.6; }
+    .link-text { font-family: var(--mono); font-size: 10px; fill: var(--text-dim); text-anchor: middle; }
+
+    .node-group { cursor: pointer; transition: transform 0.2s; }
+    .node-group:hover .node-bg {
+      stroke: var(--accent);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+    .node-bg {
+      fill: #141c26;
+      stroke: #253446;
+      stroke-width: 1.5;
+      rx: 10;
+      transition: all 0.2s ease;
+    }
+    .node-icon-box { fill: #1c2736; rx: 6; }
+    .node-name { font-family: var(--font); font-size: 12px; font-weight: 600; fill: #f8fafc; }
+    .node-ip { font-family: var(--mono); font-size: 10px; fill: #94a3b8; }
+    .node-tag { font-family: var(--mono); font-size: 9px; font-weight: 600; }
+
+    .packet-dot {
+      fill: var(--accent);
+      filter: drop-shadow(0 0 8px var(--accent));
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .packet-dot.icmp { fill: #22c55e; filter: drop-shadow(0 0 8px #22c55e); }
+    .packet-dot.vlan { fill: var(--cyan); filter: drop-shadow(0 0 8px var(--cyan)); }
+    .packet-dot.failover { fill: var(--amber); filter: drop-shadow(0 0 8px var(--amber)); }
+    .packet-dot.drop { fill: var(--red); filter: drop-shadow(0 0 10px var(--red)); }
+
+    /* CONSOLE & INSPECTOR SIDEBAR */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .console-card, .inspect-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .console-card { flex: 1; }
+    .card-header {
+      background: rgba(0,0,0,0.3);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .clear-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 11px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .clear-btn:hover { color: var(--text); }
+
+    .console-body {
+      padding: 14px 16px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      height: 260px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: #080c11;
+    }
+    .log-line { display: flex; gap: 8px; word-break: break-all; }
+    .log-time { color: var(--text-dim); flex-shrink: 0; }
+    .log-host { color: var(--accent); font-weight: 600; flex-shrink: 0; }
+    .log-msg { color: #e2e8f0; }
+    .log-msg--ok { color: #4ade80; }
+    .log-msg--warn { color: #fbbf24; }
+    .log-msg--err { color: #f87171; }
+    .log-msg--info { color: #38bdf8; }
+
+    /* DEVICE INSPECT PANEL */
+    .inspect-body {
+      padding: 14px 16px;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--text-muted);
+      background: var(--surface);
+    }
+    .inspect-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .inspect-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .inspect-item {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+    .inspect-item-label { font-size: 10px; font-family: var(--mono); color: var(--text-dim); text-transform: uppercase; }
+    .inspect-item-val { font-size: 12px; font-family: var(--mono); color: var(--accent); font-weight: 600; }
+
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 16px 24px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      background: var(--surface);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 1024px) {
+      .workspace-grid { grid-template-columns: 1fr; }
+      .console-body { height: 180px; }
+    }
+    @media (max-width: 640px) {
+      .header { flex-direction: column; align-items: flex-start; }
+      .nav-links { width: 100%; justify-content: space-between; }
+      .toolbar-card { flex-direction: column; align-items: stretch; }
+      .action-group { flex-direction: column; }
+      .action-btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="https://anggatok.my.id" class="brand">
+      <div class="brand__icon">⚡</div>
+      <div>
+        <div class="brand__title" data-id="Angga — Network Lab Simulator" data-en="Angga — Network Lab Simulator">Angga — Network Lab Simulator</div>
+        <div class="brand__subtitle">Interactive Topology &amp; Packet Tracer</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="https://anggatok.my.id" class="nav-btn">🌐 <span data-id="Portofolio Utama" data-en="Main Portfolio">Portofolio Utama</span></a>
+      <a href="https://portfolio.anggatok.my.id" class="nav-btn">🖥️ <span data-id="Terminal UI" data-en="Terminal UI">Terminal UI</span></a>
+      <div class="lang-toggle">
+        <button type="button" class="lang-btn active" id="btnLangId">ID</button>
+        <button type="button" class="lang-btn" id="btnLangEn">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="container">
+    <!-- TOOLBAR CONTROLS -->
+    <div class="toolbar-card">
+      <div class="action-group">
+        <button type="button" class="action-btn action-btn--primary" id="btnPing">
+          <span>⚡</span> <span data-id="1. Kirim Ping (ICMP Echo)" data-en="1. Send Ping (ICMP Echo)">1. Kirim Ping (ICMP Echo)</span>
+        </button>
+        <button type="button" class="action-btn action-btn--danger" id="btnFailover">
+          <span>⇄</span> <span data-id="2. Simulasi Failover WAN" data-en="2. Simulate WAN Failover">2. Simulasi Failover WAN</span>
+        </button>
+        <button type="button" class="action-btn action-btn--info" id="btnVlan">
+          <span>🏷️</span> <span data-id="3. VLAN Tagging (802.1Q)" data-en="3. VLAN Tagging (802.1Q)">3. VLAN Tagging (802.1Q)</span>
+        </button>
+        <button type="button" class="action-btn" id="btnFirewall">
+          <span>🛡️</span> <span data-id="4. Firewall Port 22 Drop" data-en="4. Firewall Port 22 Drop">4. Firewall Port 22 Drop</span>
+        </button>
+        <button type="button" class="action-btn" id="btnReset">
+          <span>↺</span> <span data-id="Reset Lab" data-en="Reset Lab">Reset Lab</span>
+        </button>
+      </div>
+      <div class="system-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText" data-id="Status: Normal (Primary WAN Aktif)" data-en="Status: Normal (Primary WAN Active)">Status: Normal (Primary WAN Aktif)</span>
+      </div>
+    </div>
+
+    <!-- WORKSPACE CANVAS & SIDEBAR -->
+    <div class="workspace-grid">
+      <!-- SVG TOPOLOGY -->
+      <div class="canvas-card">
+        <div class="canvas-header">
+          <span data-id="Enterprise Network Topology Diagram (Klik perangkat untuk inspeksi)" data-en="Enterprise Network Topology Diagram (Click node to inspect)">Enterprise Network Topology Diagram (Klik perangkat untuk inspeksi)</span>
+          <span style="color:var(--accent)">LIVE SVG</span>
+        </div>
+        <div class="canvas-body">
+          <svg viewBox="0 0 960 400" className="topology-svg" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+            <!-- LINKS -->
+            <!-- 1. Client -> Ruijie -->
+            <line x1="100" y1="280" x2="300" y2="280" class="link-line active" />
+            <text x="200" y="270" class="link-text">Gi0/1 (VLAN 10)</text>
+
+            <!-- 2. Ruijie -> Zabbix -->
+            <line x1="300" y1="280" x2="300" y2="90" class="link-line active" />
+            <text x="315" y="190" class="link-text">Gi0/2</text>
+
+            <!-- 3. Ruijie -> Huawei Core -->
+            <line x1="300" y1="280" x2="530" y2="280" class="link-line active" />
+            <text x="415" y="270" class="link-text">Trunk 802.1Q (Gi0/24)</text>
+
+            <!-- 4. Huawei Core -> MikroTik CCR -->
+            <line x1="530" y1="280" x2="740" y2="280" class="link-line active" />
+            <text x="635" y="270" class="link-text">10.0.0.0/30 (L3 Core)</text>
+
+            <!-- 5. MikroTik CCR -> ISP Primary -->
+            <line x1="740" y1="280" x2="880" y2="100" class="link-line active" id="linkPrimary" />
+            <text x="810" y="170" class="link-text">Primary WAN (BGP)</text>
+
+            <!-- 6. MikroTik CCR -> ISP Backup -->
+            <line x1="740" y1="280" x2="880" y2="340" class="link-line backup" id="linkBackup" />
+            <text x="810" y="325" class="link-text">Backup WAN (Failover)</text>
+
+            <!-- PACKET ANIMATION DOT -->
+            <circle id="packetDot" cx="100" cy="280" r="7" class="packet-dot" style="opacity:0;" />
+
+            <!-- NODES -->
+            <!-- Node 1: Host-01 -->
+            <g class="node-group" data-name="Host-01 (Workstation)" data-ip="192.168.10.101/24" data-os="Linux Ubuntu 24.04" data-vlan="VLAN 10" data-role="Client Endpoint">
+              <rect x="30" y="245" width="140" height="70" class="node-bg" />
+              <rect x="42" y="260" width="36" height="36" class="node-icon-box" />
+              <text x="60" y="283" fill="#38bdf8" text-anchor="middle" font-size="18">💻</text>
+              <text x="88" y="272" class="node-name">Host-01</text>
+              <text x="88" y="288" class="node-ip">192.168.10.101</text>
+              <text x="88" y="302" class="node-tag" fill="#a3e635">VLAN 10</text>
+            </g>
+
+            <!-- Node 2: Ruijie Access Switch -->
+            <g class="node-group" data-name="Ruijie Access Switch" data-ip="10.0.0.3" data-os="Ruijie RGOS" data-vlan="VLAN 10, 20" data-role="L2 Access & PoE Switch">
+              <rect x="225" y="245" width="150" height="70" class="node-bg" />
+              <rect x="237" y="260" width="36" height="36" class="node-icon-box" />
+              <text x="255" y="283" fill="#0066cc" text-anchor="middle" font-size="18">🔀</text>
+              <text x="283" y="272" class="node-name">Ruijie Switch</text>
+              <text x="283" y="288" class="node-ip">RG-NBS3100</text>
+              <text x="283" y="302" class="node-tag" fill="#38bdf8">VLAN 10/20 Trunk</text>
+            </g>
+
+            <!-- Node 3: NOC Zabbix Server -->
+            <g class="node-group" data-name="NOC Zabbix Server" data-ip="192.168.10.50/24" data-os="Debian 12 / Zabbix 7.0 LTS" data-vlan="VLAN 10" data-role="NOC Monitoring & SNMP">
+              <rect x="225" y="55" width="150" height="70" class="node-bg" />
+              <rect x="237" y="70" width="36" height="36" class="node-icon-box" />
+              <text x="255" y="93" fill="#f87171" text-anchor="middle" font-size="18">🖥️</text>
+              <text x="283" y="82" class="node-name">NOC Zabbix</text>
+              <text x="283" y="98" class="node-ip">192.168.10.50</text>
+              <text x="283" y="112" class="node-tag" fill="#f46800">SNMP Server</text>
+            </g>
+
+            <!-- Node 4: Huawei Core Switch -->
+            <g class="node-group" data-name="Huawei Core Switch" data-ip="10.0.0.2/30" data-os="Huawei VRP 8.0" data-vlan="VLAN 10, 20, 99" data-role="L3 Core & Inter-VLAN Routing">
+              <rect x="455" y="245" width="150" height="70" class="node-bg" />
+              <rect x="467" y="260" width="36" height="36" class="node-icon-box" />
+              <text x="485" y="283" fill="#e41e2b" text-anchor="middle" font-size="18">🏢</text>
+              <text x="513" y="272" class="node-name">Huawei Core</text>
+              <text x="513" y="288" class="node-ip">S5735-L (L3 Core)</text>
+              <text x="513" y="302" class="node-tag" fill="#a3e635">10.0.0.2/30</text>
+            </g>
+
+            <!-- Node 5: MikroTik Core Router -->
+            <g class="node-group" data-name="MikroTik CCR Router" data-ip="10.0.0.1/30 & 203.0.113.2" data-os="RouterOS v7.15" data-vlan="BGP, NAT, OSPF" data-role="Edge BGP Gateway & Firewall">
+              <rect x="665" y="245" width="150" height="70" class="node-bg" />
+              <rect x="677" y="260" width="36" height="36" class="node-icon-box" />
+              <text x="695" y="283" fill="#cc0000" text-anchor="middle" font-size="18">🛡️</text>
+              <text x="723" y="272" class="node-name">MikroTik CCR</text>
+              <text x="723" y="288" class="node-ip">CCR2004-1G-12S+</text>
+              <text x="723" y="302" class="node-tag" fill="#f59e0b">BGP · NAT · FW</text>
+            </g>
+
+            <!-- Node 6: ISP Primary -->
+            <g class="node-group" data-name="Primary ISP Gateway" data-ip="203.0.113.1 (AS65001)" data-os="BGP Core Gateway" data-vlan="Public WAN" data-role="Primary Upstream Gateway">
+              <rect x="825" y="65" width="125" height="65" class="node-bg" />
+              <rect x="835" y="78" width="34" height="34" class="node-icon-box" />
+              <text x="852" y="100" fill="#22c55e" text-anchor="middle" font-size="16">🌐</text>
+              <text x="876" y="89" class="node-name">ISP Primary</text>
+              <text x="876" y="103" class="node-ip">203.0.113.1</text>
+              <text x="876" y="116" class="node-tag" fill="#22c55e">WAN Active</text>
+            </g>
+
+            <!-- Node 7: ISP Backup -->
+            <g class="node-group" data-name="Secondary Backup ISP" data-ip="198.51.100.1 (AS65002)" data-os="Secondary Upstream Gateway" data-vlan="Public WAN" data-role="Redundant Backup Route">
+              <rect x="825" y="305" width="125" height="65" class="node-bg" />
+              <rect x="835" y="318" width="34" height="34" class="node-icon-box" />
+              <text x="852" y="340" fill="#f59e0b" text-anchor="middle" font-size="16">☁️</text>
+              <text x="876" y="329" class="node-name">ISP Backup</text>
+              <text x="876" y="343" class="node-ip">198.51.100.1</text>
+              <text x="876" y="356" class="node-tag" fill="#f59e0b">Standby WAN</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- CONSOLE & INSPECTOR -->
+      <aside class="sidebar">
+        <!-- CONSOLE -->
+        <div class="console-card">
+          <div class="card-header">
+            <div class="card-title">
+              <span style="color:#4ade80">●</span> <span>NOC ROUTE &amp; PACKET LOG</span>
+            </div>
+            <button type="button" class="clear-btn" id="btnClearLog" data-id="Bersihkan" data-en="Clear">Bersihkan</button>
+          </div>
+          <div class="console-body" id="consoleBody">
+            <div class="log-line">
+              <span class="log-time">[00:00:00]</span>
+              <span class="log-host">[SYS-INIT]</span>
+              <span class="log-msg log-msg--info" data-id="Simulator topologi siap. Klik tombol skenario di atas untuk menguji aliran paket." data-en="Topology simulator ready. Click action buttons above to test live packet flows.">Simulator topologi siap. Klik tombol skenario di atas untuk menguji aliran paket.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEVICE INSPECTOR -->
+        <div class="inspect-card">
+          <div class="card-header">
+            <div class="card-title">
+              <span style="color:var(--cyan)">ℹ</span> <span data-id="Inspeksi Perangkat" data-en="Device Inspector">Inspeksi Perangkat</span>
+            </div>
+          </div>
+          <div class="inspect-body" id="inspectBody">
+            <div class="inspect-title" id="inspectName">MikroTik CCR Router</div>
+            <div style="font-size:12px;color:var(--text-dim);" id="inspectRole">Core Edge Router (CCR2004-1G-12S+)</div>
+            <div class="inspect-meta">
+              <div class="inspect-item">
+                <div class="inspect-item-label">IP Address</div>
+                <div class="inspect-item-val" id="inspectIp">10.0.0.1 / 203.0.113.2</div>
+              </div>
+              <div class="inspect-item">
+                <div class="inspect-item-label">Operating System</div>
+                <div class="inspect-item-val" id="inspectOs">RouterOS v7.15</div>
+              </div>
+              <div class="inspect-item">
+                <div class="inspect-item-label">Segment / VLAN</div>
+                <div class="inspect-item-val" id="inspectVlan">BGP · NAT · OSPF</div>
+              </div>
+              <div class="inspect-item">
+                <div class="inspect-item-label">Interface Status</div>
+                <div class="inspect-item-val" style="color:#22c55e;">UP (10 Gbps SFP+)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 Angga — Network Engineer &amp; NOC Specialist. <a href="https://anggatok.my.id">anggatok.my.id</a> · <a href="https://portfolio.anggatok.my.id">portfolio.anggatok.my.id</a></p>
+  </footer>
+
+  <script>
+    let currentLang = 'id';
+    let isFailover = false;
+    let isSimulating = false;
+
+    const consoleBody = document.getElementById('consoleBody');
+    const statusText = document.getElementById('statusText');
+    const statusDot = document.getElementById('statusDot');
+    const linkPrimary = document.getElementById('linkPrimary');
+    const linkBackup = document.getElementById('linkBackup');
+    const packetDot = document.getElementById('packetDot');
+
+    function getNow() {
+      return new Date().toTimeString().split(' ')[0];
+    }
+
+    function log(host, msg, type = 'info') {
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      const typeClass = type === 'ok' ? 'log-msg--ok' : type === 'warn' ? 'log-msg--warn' : type === 'err' ? 'log-msg--err' : 'log-msg--info';
+      line.innerHTML = `<span class="log-time">[${getNow()}]</span> <span class="log-host">[${host}]</span> <span class="log-msg ${typeClass}">${msg}</span>`;
+      consoleBody.appendChild(line);
+      consoleBody.scrollTop = consoleBody.scrollHeight;
+    }
+
+    function clearLog() {
+      consoleBody.innerHTML = '';
+    }
+
+    // Node coordinates on SVG viewBox 0 0 960 400
+    const coords = {
+      client: { x: 100, y: 280 },
+      ruijie: { x: 300, y: 280 },
+      zabbix: { x: 300, y: 90 },
+      huawei: { x: 530, y: 280 },
+      mikrotik: { x: 740, y: 280 },
+      ispPrimary: { x: 880, y: 100 },
+      ispBackup: { x: 880, y: 340 }
+    };
+
+    function movePacket(points, colorType, durationPerLeg, onLeg, onComplete) {
+      if (!packetDot || points.length < 2) {
+        if (onComplete) onComplete();
+        return;
+      }
+      packetDot.setAttribute('class', `packet-dot ${colorType}`);
+      packetDot.style.opacity = '1';
+      let leg = 0;
+
+      function runLeg() {
+        if (leg >= points.length - 1) {
+          packetDot.style.opacity = '0';
+          if (onComplete) onComplete();
+          return;
+        }
+        const pStart = points[leg];
+        const pEnd = points[leg + 1];
+        if (onLeg) onLeg(leg, pStart, pEnd);
+
+        const startTime = performance.now();
+        function step(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / durationPerLeg, 1);
+          const curX = pStart.x + (pEnd.x - pStart.x) * progress;
+          const curY = pStart.y + (pEnd.y - pStart.y) * progress;
+          packetDot.setAttribute('cx', curX);
+          packetDot.setAttribute('cy', curY);
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            leg++;
+            setTimeout(runLeg, 40);
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      runLeg();
+    }
+
+    // 1. PING ACTION
+    document.getElementById('btnPing').addEventListener('click', () => {
+      if (isSimulating) return;
+      isSimulating = true;
+      clearLog();
+      const targetISP = isFailover ? coords.ispBackup : coords.ispPrimary;
+      log('Host-01', `PING ${isFailover ? '198.51.100.1' : '203.0.113.1'}: 64 data bytes (ICMP Echo)`, 'info');
+
+      const outbound = [coords.client, coords.ruijie, coords.huawei, coords.mikrotik, targetISP];
+      movePacket(outbound, 'icmp', 220, (leg) => {
+        if (leg === 0) log('Ruijie-SW', 'Forwarding packet via 802.1Q Trunk (VLAN 10 Tagged)', 'info');
+        if (leg === 1) log('Huawei-Core', 'Inter-VLAN Route lookup -> Next-hop 10.0.0.1 (CCR Router)', 'info');
+        if (leg === 2) log('MikroTik-CCR', `NAT Masquerade -> Out Interface: ${isFailover ? 'ether2 (Backup)' : 'ether1 (Primary)'}`, 'ok');
+        if (leg === 3) log('ISP-Gateway', 'ICMP Echo Received. Generating Echo-Reply packet.', 'ok');
+      }, () => {
+        const inbound = [targetISP, coords.mikrotik, coords.huawei, coords.ruijie, coords.client];
+        movePacket(inbound, 'icmp', 190, null, () => {
+          log('Host-01', `64 bytes from ${isFailover ? '198.51.100.1' : '203.0.113.1'}: icmp_seq=1 ttl=58 time=7.82 ms`, 'ok');
+          log('Host-01', '--- Ping statistics: 1 packets transmitted, 1 received, 0% packet loss (RTT avg=7.82ms) ---', 'ok');
+          isSimulating = false;
+        });
+      });
+    });
+
+    // 2. FAILOVER ACTION
+    document.getElementById('btnFailover').addEventListener('click', () => {
+      if (isSimulating) return;
+      isFailover = !isFailover;
+      if (isFailover) {
+        linkPrimary.classList.remove('active');
+        linkPrimary.classList.add('down');
+        linkBackup.classList.add('active');
+        statusText.textContent = currentLang === 'id' ? 'Status: FAILOVER (Backup WAN Aktif)' : 'Status: FAILOVER (Backup WAN Active)';
+        statusDot.className = 'status-dot failover';
+        log('BGP-DAEMON', 'ALERT: BGP Session to AS65001 (Primary ISP) DROPPED! Link Loss detected.', 'err');
+        log('MikroTik-CCR', 'Dynamic Route Failover: Default Route -> 198.51.100.1 (Metric 20)', 'warn');
+        log('MikroTik-CCR', 'Backup WAN UP (ether2). Traffic rerouted successfully in 0.84s.', 'ok');
+      } else {
+        linkPrimary.classList.remove('down');
+        linkPrimary.classList.add('active');
+        linkBackup.classList.remove('active');
+        statusText.textContent = currentLang === 'id' ? 'Status: Normal (Primary WAN Aktif)' : 'Status: Normal (Primary WAN Active)';
+        statusDot.className = 'status-dot';
+        log('BGP-DAEMON', 'Primary Link Restored. BGP Session Established to AS65001.', 'ok');
+        log('MikroTik-CCR', 'Default Route reverted to Primary Gateway 203.0.113.1 (Metric 10).', 'info');
+      }
+    });
+
+    // 3. VLAN ACTION
+    document.getElementById('btnVlan').addEventListener('click', () => {
+      if (isSimulating) return;
+      isSimulating = true;
+      clearLog();
+      log('Host-01', 'Host sending SNMP Query to Monitoring Server (192.168.10.50)', 'info');
+      const path = [coords.client, coords.ruijie, coords.zabbix];
+      movePacket(path, 'vlan', 280, (leg) => {
+        if (leg === 0) log('Ruijie-SW', 'Untagged Ethernet Frame received on Port Gi0/1 (Assigned PVID: 10)', 'info');
+        if (leg === 1) log('Zabbix-SRV', 'Frame received on eth0 (VLAN 10). SNMP Response generated.', 'ok');
+      }, () => {
+        const pathBack = [coords.zabbix, coords.ruijie, coords.client];
+        movePacket(pathBack, 'vlan', 240, null, () => {
+          log('Host-01', 'SNMP Response: Zabbix Server Status [UP] - 0 packet loss.', 'ok');
+          isSimulating = false;
+        });
+      });
+    });
+
+    // 4. FIREWALL ACTION
+    document.getElementById('btnFirewall').addEventListener('click', () => {
+      if (isSimulating) return;
+      isSimulating = true;
+      clearLog();
+      log('Host-01', 'Attempting unauthorized SSH connection to WAN IP: 203.0.113.1:22', 'warn');
+      const path = [coords.client, coords.ruijie, coords.huawei, coords.mikrotik];
+      movePacket(path, 'drop', 220, (leg) => {
+        if (leg === 2) log('MikroTik-CCR', 'FIREWALL FILTER: Checking Chain=FORWARD, Dst-Port=22, Action=DROP', 'warn');
+      }, () => {
+        log('MikroTik-CCR', '[DROP] IN=vlan10 OUT=ether1 SRC=192.168.10.101 DST=203.0.113.1 PROTO=TCP DPT=22', 'err');
+        log('Host-01', 'ssh: connect to host 203.0.113.1 port 22: Connection refused / Dropped by Firewall Rule.', 'err');
+        isSimulating = false;
+      });
+    });
+
+    // 5. RESET ACTION
+    document.getElementById('btnReset').addEventListener('click', () => {
+      isFailover = false;
+      isSimulating = false;
+      linkPrimary.classList.remove('down');
+      linkPrimary.classList.add('active');
+      linkBackup.classList.remove('active');
+      statusText.textContent = currentLang === 'id' ? 'Status: Normal (Primary WAN Aktif)' : 'Status: Normal (Primary WAN Active)';
+      statusDot.className = 'status-dot';
+      packetDot.style.opacity = '0';
+      clearLog();
+      log('SYS-RESET', 'Topology and links reset to default normal operational state.', 'ok');
+    });
+
+    // 6. CLEAR LOG
+    document.getElementById('btnClearLog').addEventListener('click', clearLog);
+
+    // 7. NODE INSPECTION
+    document.querySelectorAll('.node-group').forEach(node => {
+      node.addEventListener('click', () => {
+        const name = node.dataset.name || 'Device';
+        const ip = node.dataset.ip || 'N/A';
+        const os = node.dataset.os || 'N/A';
+        const vlan = node.dataset.vlan || 'N/A';
+        const role = node.dataset.role || 'N/A';
+
+        document.getElementById('inspectName').textContent = name;
+        document.getElementById('inspectRole').textContent = role;
+        document.getElementById('inspectIp').textContent = ip;
+        document.getElementById('inspectOs').textContent = os;
+        document.getElementById('inspectVlan').textContent = vlan;
+
+        log(name.split(' ')[0], `INSPECT: IP=${ip} | OS=${os} | Role=${role} | Status=ONLINE`, 'info');
+      });
+    });
+
+    // LANGUAGE SWITCH
+    const btnLangId = document.getElementById('btnLangId');
+    const btnLangEn = document.getElementById('btnLangEn');
+
+    function setLanguage(l) {
+      currentLang = l;
+      btnLangId.classList.toggle('active', l === 'id');
+      btnLangEn.classList.toggle('active', l === 'en');
+      document.documentElement.lang = l;
+      document.querySelectorAll('[data-id][data-en]').forEach(el => {
+        el.textContent = l === 'id' ? el.dataset.id : el.dataset.en;
+      });
+      if (!isFailover) {
+        statusText.textContent = l === 'id' ? 'Status: Normal (Primary WAN Aktif)' : 'Status: Normal (Primary WAN Active)';
+      } else {
+        statusText.textContent = l === 'id' ? 'Status: FAILOVER (Backup WAN Aktif)' : 'Status: FAILOVER (Backup WAN Active)';
+      }
+    }
+
+    btnLangId.addEventListener('click', () => setLanguage('id'));
+    btnLangEn.addEventListener('click', () => setLanguage('en'));
+  </script>
+</body>
+</html>
