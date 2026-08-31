@@ -297,12 +297,38 @@
       stroke: rgba(255,255,255,0.18);
       stroke-width: 2.5;
       stroke-linecap: round;
-      transition: stroke 0.3s ease;
+      transition: stroke 0.3s ease, stroke-width 0.3s ease, filter 0.3s ease;
     }
     .link-line.active { stroke: #22c55e; stroke-width: 3; }
     .link-line.backup { stroke: var(--amber); stroke-dasharray: 6 4; }
     .link-line.down { stroke: var(--red); stroke-dasharray: 4 4; opacity: 0.6; }
     .link-text { font-family: var(--mono); font-size: 10px; fill: var(--text-dim); text-anchor: middle; }
+
+    /* HIGH-ENERGY CABLE TRANSMISSION FLOW (DATA BURST / PHOTON BEAM) */
+    .link-line.flowing {
+      stroke: #22c55e !important;
+      stroke-dasharray: 10 6 !important;
+      stroke-width: 4.5 !important;
+      animation: cableDataFlow 0.35s linear infinite !important;
+      filter: drop-shadow(0 0 12px #22c55e) !important;
+    }
+    .link-line.flowing.cyan {
+      stroke: var(--cyan) !important;
+      filter: drop-shadow(0 0 12px var(--cyan)) !important;
+    }
+    .link-line.flowing.amber {
+      stroke: var(--amber) !important;
+      filter: drop-shadow(0 0 12px var(--amber)) !important;
+    }
+    .link-line.flowing.red {
+      stroke: #ef4444 !important;
+      filter: drop-shadow(0 0 14px #ef4444) !important;
+    }
+
+    @keyframes cableDataFlow {
+      from { stroke-dashoffset: 32; }
+      to { stroke-dashoffset: 0; }
+    }
 
     .node-group { cursor: pointer; transition: transform 0.2s; }
     .node-group:hover .node-bg {
@@ -315,23 +341,104 @@
       stroke: #253446;
       stroke-width: 1.5;
       rx: 10;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
     .node-icon-box { fill: #1c2736; rx: 6; }
     .node-name { font-family: var(--font); font-size: 12px; font-weight: 600; fill: #f8fafc; }
     .node-ip { font-family: var(--mono); font-size: 10px; fill: #94a3b8; }
     .node-tag { font-family: var(--mono); font-size: 9px; font-weight: 600; }
 
-    .packet-dot {
-      fill: var(--accent);
-      filter: drop-shadow(0 0 8px var(--accent));
-      pointer-events: none;
-      transition: opacity 0.2s;
+    /* NODE ARRIVAL FLASH REACTION */
+    .node-group.node-flash-green .node-bg {
+      stroke: #22c55e !important;
+      stroke-width: 3.5 !important;
+      filter: drop-shadow(0 0 22px #22c55e) !important;
     }
-    .packet-dot.icmp { fill: #22c55e; filter: drop-shadow(0 0 8px #22c55e); }
-    .packet-dot.vlan { fill: var(--cyan); filter: drop-shadow(0 0 8px var(--cyan)); }
-    .packet-dot.failover { fill: var(--amber); filter: drop-shadow(0 0 8px var(--amber)); }
-    .packet-dot.drop { fill: var(--red); filter: drop-shadow(0 0 10px var(--red)); }
+    .node-group.node-flash-cyan .node-bg {
+      stroke: var(--cyan) !important;
+      stroke-width: 3.5 !important;
+      filter: drop-shadow(0 0 22px var(--cyan)) !important;
+    }
+    .node-group.node-flash-amber .node-bg {
+      stroke: var(--amber) !important;
+      stroke-width: 3.5 !important;
+      filter: drop-shadow(0 0 22px var(--amber)) !important;
+    }
+    .node-group.node-flash-red .node-bg {
+      stroke: #ef4444 !important;
+      stroke-width: 4 !important;
+      filter: drop-shadow(0 0 25px #ef4444) !important;
+    }
+
+    /* CYBER PACKET CARRIER & HALO */
+    .packet-halo {
+      fill: rgba(34, 197, 94, 0.3);
+      animation: haloPulse 0.6s ease-in-out infinite alternate;
+    }
+    .packet-core {
+      fill: #22c55e;
+      filter: drop-shadow(0 0 10px #22c55e);
+    }
+    .packet-tail {
+      fill: #22c55e;
+      filter: drop-shadow(0 0 6px #22c55e);
+    }
+    .packet-badge-bg {
+      fill: #090d14;
+      stroke: #22c55e;
+      stroke-width: 1.2;
+    }
+    .packet-badge-text {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      font-weight: 700;
+      fill: #22c55e;
+      text-anchor: middle;
+    }
+
+    /* THEME VARIATIONS FOR PACKET */
+    .packet-theme-cyan .packet-halo { fill: rgba(56, 189, 248, 0.3); }
+    .packet-theme-cyan .packet-core, .packet-theme-cyan .packet-tail { fill: var(--cyan); filter: drop-shadow(0 0 10px var(--cyan)); }
+    .packet-theme-cyan .packet-badge-bg { stroke: var(--cyan); }
+    .packet-theme-cyan .packet-badge-text { fill: var(--cyan); }
+
+    .packet-theme-amber .packet-halo { fill: rgba(245, 158, 11, 0.3); }
+    .packet-theme-amber .packet-core, .packet-theme-amber .packet-tail { fill: var(--amber); filter: drop-shadow(0 0 10px var(--amber)); }
+    .packet-theme-amber .packet-badge-bg { stroke: var(--amber); }
+    .packet-theme-amber .packet-badge-text { fill: var(--amber); }
+
+    .packet-theme-red .packet-halo { fill: rgba(239, 68, 68, 0.4); }
+    .packet-theme-red .packet-core, .packet-theme-red .packet-tail { fill: #ef4444; filter: drop-shadow(0 0 12px #ef4444); }
+    .packet-theme-red .packet-badge-bg { stroke: #ef4444; }
+    .packet-theme-red .packet-badge-text { fill: #ef4444; }
+
+    @keyframes haloPulse {
+      0% { r: 10; opacity: 0.4; }
+      100% { r: 16; opacity: 0.9; }
+    }
+
+    /* DROP SHOCKWAVE BURST */
+    .drop-shockwave {
+      fill: none;
+      stroke: #ef4444;
+      stroke-width: 2.5;
+      animation: dropWave 0.7s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+    .drop-shockwave.delay {
+      animation-delay: 0.25s;
+    }
+    .drop-badge-text {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      fill: #ef4444;
+      text-anchor: middle;
+      filter: drop-shadow(0 0 10px #ef4444);
+    }
+    @keyframes dropWave {
+      0% { r: 8; opacity: 1; stroke-width: 3.5; }
+      100% { r: 42; opacity: 0; stroke-width: 0.5; }
+    }
 
     /* SIDEBAR */
     .sidebar {
@@ -757,25 +864,25 @@
           <svg viewBox="0 0 1280 360" class="topology-svg" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
             <!-- 1. CABLE LINKS (RENDERED UNDERNEATH) -->
             <!-- Link 1: Host-01 -> Ruijie Switch -->
-            <line x1="92" y1="273" x2="295" y2="273" class="link-line active" />
+            <line id="link-client-ruijie" x1="92" y1="273" x2="295" y2="273" class="link-line active" />
 
             <!-- Link 2: Ruijie -> Zabbix -->
-            <line x1="295" y1="273" x2="295" y2="73" class="link-line active" />
+            <line id="link-ruijie-zabbix" x1="295" y1="273" x2="295" y2="73" class="link-line active" />
 
             <!-- Link 3: Ruijie -> Huawei Core -->
-            <line x1="295" y1="273" x2="500" y2="273" class="link-line active" />
+            <line id="link-ruijie-huawei" x1="295" y1="273" x2="500" y2="273" class="link-line active" />
 
             <!-- Link 4: Huawei Core -> Juniper SRX -->
-            <line x1="500" y1="273" x2="705" y2="273" class="link-line active" />
+            <line id="link-huawei-juniper" x1="500" y1="273" x2="705" y2="273" class="link-line active" />
 
             <!-- Link 5: Juniper SRX -> MikroTik CCR -->
-            <line x1="705" y1="273" x2="910" y2="273" class="link-line active" />
+            <line id="link-juniper-mikrotik" x1="705" y1="273" x2="910" y2="273" class="link-line active" />
 
             <!-- Link 6: MikroTik CCR -> ISP Primary -->
-            <line x1="910" y1="273" x2="1125" y2="73" class="link-line active" id="linkPrimary" />
+            <line id="linkPrimary" x1="910" y1="273" x2="1125" y2="73" class="link-line active" />
 
             <!-- Link 7: MikroTik CCR -> ISP Backup -->
-            <line x1="910" y1="273" x2="1125" y2="273" class="link-line backup" id="linkBackup" />
+            <line id="linkBackup" x1="910" y1="273" x2="1125" y2="273" class="link-line backup" />
 
             <!-- 2. INLINE COMPACT LINK BADGES (ZERO OVERFLOW / ZERO CLIPPING) -->
             <!-- Badge 1: VLAN 10 -->
@@ -799,13 +906,13 @@
             <!-- Badge 4: 10.0.1.0/30 (Trust Uplink) -->
             <g>
               <rect x="573" y="263" width="58" height="20" rx="4" fill="#090d14" stroke="#10b981" stroke-width="1" />
-              <text x="602" y="276" font-family="'JetBrains Mono', monospace" font-size="8" fill="#10b981" font-weight="600" text-anchor="middle">10.0.1.0/30</text>
+              <text x="602" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#10b981" font-weight="600" text-anchor="middle">10.0.1.0/30</text>
             </g>
 
             <!-- Badge 5: 10.0.0.0/30 (Untrust to CCR) -->
             <g>
               <rect x="778" y="263" width="58" height="20" rx="4" fill="#090d14" stroke="#a3e635" stroke-width="1" />
-              <text x="807" y="276" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3e635" font-weight="600" text-anchor="middle">10.0.0.0/30</text>
+              <text x="807" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#a3e635" font-weight="600" text-anchor="middle">10.0.0.0/30</text>
             </g>
 
             <!-- Badge 6: Primary WAN BGP -->
@@ -820,8 +927,30 @@
               <text x="1015" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#f59e0b" font-weight="600" text-anchor="middle">Failover</text>
             </g>
 
-            <!-- 3. PACKET ANIMATION DOT -->
-            <circle id="packetDot" cx="92" cy="273" r="7" class="packet-dot" style="opacity:0;" />
+            <!-- 3. ANIMATED GLOWING CYBER DATA PACKET / PHOTON ENTITY -->
+            <g id="packetGroup" style="opacity: 0; pointer-events: none;">
+              <!-- Outer glowing pulse halo -->
+              <circle id="packetHalo" cx="0" cy="0" r="14" class="packet-halo" />
+              <!-- Trailing comet tail particles -->
+              <circle id="packetTail2" cx="-12" cy="0" r="4" class="packet-tail" opacity="0.4" />
+              <circle id="packetTail1" cx="-6" cy="0" r="6" class="packet-tail" opacity="0.7" />
+              <!-- High-energy core -->
+              <circle id="packetCore" cx="0" cy="0" r="7" class="packet-core" />
+              <circle id="packetCenter" cx="0" cy="0" r="3.5" fill="#ffffff" />
+              <!-- Mini floating payload badge -->
+              <g id="packetBadge" transform="translate(10, -18)">
+                <rect width="66" height="18" rx="4" class="packet-badge-bg" />
+                <text id="packetBadgeText" x="33" y="12" class="packet-badge-text">ICMP</text>
+              </g>
+            </g>
+
+            <!-- Firewall Block Shockwave Burst -->
+            <g id="dropEffect" style="opacity: 0; pointer-events: none;">
+              <circle cx="705" cy="273" r="15" class="drop-shockwave" />
+              <circle cx="705" cy="273" r="28" class="drop-shockwave delay" />
+              <rect x="665" y="222" width="80" height="20" rx="4" fill="#180c0e" stroke="#ef4444" stroke-width="1.2" />
+              <text x="705" y="236" class="drop-badge-text">🚫 REJECTED</text>
+            </g>
 
             <!-- 4. NODES (SPACIOUS ENTERPRISE CARDS) -->
             <!-- Node 1: Host-01 -->
@@ -1550,37 +1679,84 @@ router bgp 65002
       ispBackup: { x: 1125, y: 273 }
     };
 
-    function movePacket(points, colorType, durationPerLeg, onLeg, onComplete) {
-      if (!packetDot || points.length < 2) {
+    const packetGroup = document.getElementById('packetGroup');
+    const packetBadgeText = document.getElementById('packetBadgeText');
+    const dropEffect = document.getElementById('dropEffect');
+
+    function flashNode(nodeId, theme = 'green') {
+      const nodeEl = document.querySelector(`.node-group[data-device-id="${nodeId}"]`);
+      if (!nodeEl) return;
+      const flashClass = theme === 'cyan' ? 'node-flash-cyan' : theme === 'amber' ? 'node-flash-amber' : theme === 'red' ? 'node-flash-red' : 'node-flash-green';
+      nodeEl.classList.add(flashClass);
+      setTimeout(() => nodeEl.classList.remove(flashClass), 600);
+    }
+
+    function clearAllCableFlows() {
+      document.querySelectorAll('.link-line').forEach(l => {
+        l.classList.remove('flowing', 'cyan', 'amber', 'red');
+      });
+    }
+
+    function movePacket(points, colorType, badgeText, linkIds, nodeIds, durationPerLeg, onLeg, onComplete) {
+      if (!packetGroup || points.length < 2) {
         if (onComplete) onComplete();
         return;
       }
-      packetDot.setAttribute('class', `packet-dot ${colorType}`);
-      packetDot.style.opacity = '1';
+
+      // Configure packet appearance
+      packetGroup.className.baseVal = `packet-theme-${colorType}`;
+      if (packetBadgeText) packetBadgeText.textContent = badgeText || 'DATA';
+      packetGroup.style.opacity = '1';
+      clearAllCableFlows();
+
       let leg = 0;
 
       function runLeg() {
         if (leg >= points.length - 1) {
-          packetDot.style.opacity = '0';
+          packetGroup.style.opacity = '0';
+          clearAllCableFlows();
           if (onComplete) onComplete();
           return;
         }
+
         const pStart = points[leg];
         const pEnd = points[leg + 1];
+
+        // Activate flowing energy laser along current cable
+        clearAllCableFlows();
+        if (linkIds && linkIds[leg]) {
+          const currentCable = document.getElementById(linkIds[leg]);
+          if (currentCable) {
+            currentCable.classList.add('flowing');
+            if (colorType === 'vlan' || colorType === 'cyan') currentCable.classList.add('cyan');
+            if (colorType === 'failover' || colorType === 'amber') currentCable.classList.add('amber');
+            if (colorType === 'drop' || colorType === 'red') currentCable.classList.add('red');
+          }
+        }
+
+        // Calculate travel angle for packet comet tail
+        const dx = pEnd.x - pStart.x;
+        const dy = pEnd.y - pStart.y;
+        const angleDeg = (Math.atan2(dy, dx) * 180) / Math.PI;
+
         if (onLeg) onLeg(leg, pStart, pEnd);
 
         const startTime = performance.now();
         function step(now) {
           const elapsed = now - startTime;
           const progress = Math.min(elapsed / durationPerLeg, 1);
-          const curX = pStart.x + (pEnd.x - pStart.x) * progress;
-          const curY = pStart.y + (pEnd.y - pStart.y) * progress;
-          packetDot.setAttribute('cx', curX);
-          packetDot.setAttribute('cy', curY);
+          const curX = pStart.x + dx * progress;
+          const curY = pStart.y + dy * progress;
+
+          packetGroup.setAttribute('transform', `translate(${curX}, ${curY}) rotate(${angleDeg})`);
 
           if (progress < 1) {
             requestAnimationFrame(step);
           } else {
+            // Flash arrival node
+            if (nodeIds && nodeIds[leg + 1]) {
+              flashNode(nodeIds[leg + 1], colorType);
+            }
             leg++;
             setTimeout(runLeg, 40);
           }
@@ -1596,18 +1772,27 @@ router bgp 65002
       isSimulating = true;
       clearLog();
       const targetISP = isFailover ? coords.ispBackup : coords.ispPrimary;
-      log('Host-01', `PING ${isFailover ? '198.51.100.1' : '203.0.113.1'}: 64 data bytes (ICMP Echo)`, 'info');
+      const targetLink = isFailover ? 'linkBackup' : 'linkPrimary';
+      const targetNode = isFailover ? 'ispBackup' : 'ispPrimary';
+
+      log('Host-01', `PING ${isFailover ? '198.51.100.1' : '203.0.113.1'}: 64 data bytes (ICMP Echo Request)`, 'info');
 
       const outbound = [coords.client, coords.ruijie, coords.huawei, coords.juniper, coords.mikrotik, targetISP];
-      movePacket(outbound, 'icmp', 200, (leg) => {
-        if (leg === 0) log('Ruijie-SW', 'Forwarding packet via 802.1Q Trunk (VLAN 10 Tagged)', 'info');
+      const outboundLinks = ['link-client-ruijie', 'link-ruijie-huawei', 'link-huawei-juniper', 'link-juniper-mikrotik', targetLink];
+      const outboundNodes = ['client', 'ruijie', 'huawei', 'juniper', 'mikrotik', targetNode];
+
+      movePacket(outbound, 'green', 'ICMP REQ', outboundLinks, outboundNodes, 200, (leg) => {
+        if (leg === 0) log('Ruijie-SW', 'Forwarding frame via 802.1Q Trunk (VLAN 10 Tagged)', 'info');
         if (leg === 1) log('Huawei-Core', 'Inter-VLAN Route lookup -> Next-hop 10.0.1.2 (Juniper SRX)', 'info');
         if (leg === 2) log('Juniper-SRX', 'Stateful Security Policy: trust -> untrust (Action: PERMIT)', 'ok');
         if (leg === 3) log('MikroTik-CCR', `NAT Masquerade -> Out Interface: ${isFailover ? 'ether2 (Backup)' : 'ether1 (Primary)'}`, 'ok');
         if (leg === 4) log('ISP-Gateway', 'ICMP Echo Received. Generating Echo-Reply packet.', 'ok');
       }, () => {
         const inbound = [targetISP, coords.mikrotik, coords.juniper, coords.huawei, coords.ruijie, coords.client];
-        movePacket(inbound, 'icmp', 180, null, () => {
+        const inboundLinks = [targetLink, 'link-juniper-mikrotik', 'link-huawei-juniper', 'link-ruijie-huawei', 'link-client-ruijie'];
+        const inboundNodes = [targetNode, 'mikrotik', 'juniper', 'huawei', 'ruijie', 'client'];
+
+        movePacket(inbound, 'cyan', 'ICMP REP', inboundLinks, inboundNodes, 180, null, () => {
           log('Host-01', `64 bytes from ${isFailover ? '198.51.100.1' : '203.0.113.1'}: icmp_seq=1 ttl=57 time=8.14 ms`, 'ok');
           log('Host-01', '--- Ping statistics: 1 packets transmitted, 1 received, 0% packet loss (RTT avg=8.14ms) ---', 'ok');
           isSimulating = false;
@@ -1620,22 +1805,28 @@ router bgp 65002
       if (isSimulating) return;
       isFailover = !isFailover;
       if (isFailover) {
-        linkPrimary.classList.remove('active');
+        linkPrimary.classList.remove('active', 'flowing');
         linkPrimary.classList.add('down');
-        linkBackup.classList.add('active');
+        linkBackup.classList.add('active', 'flowing', 'amber');
         statusText.textContent = currentLang === 'id' ? 'Status: FAILOVER (Backup WAN Aktif)' : 'Status: FAILOVER (Backup WAN Active)';
         statusDot.className = 'status-dot failover';
         log('BGP-DAEMON', 'ALERT: BGP Session to AS65001 (Primary ISP) DROPPED! Link Loss detected.', 'err');
         log('MikroTik-CCR', 'Dynamic Route Failover: Default Route -> 198.51.100.1 (Metric 20)', 'warn');
         log('MikroTik-CCR', 'Backup WAN UP (ether2). Traffic rerouted successfully in 0.84s.', 'ok');
+        flashNode('mikrotik', 'amber');
+        flashNode('ispBackup', 'amber');
+        setTimeout(() => linkBackup.classList.remove('flowing', 'amber'), 1500);
       } else {
         linkPrimary.classList.remove('down');
-        linkPrimary.classList.add('active');
-        linkBackup.classList.remove('active');
+        linkPrimary.classList.add('active', 'flowing');
+        linkBackup.classList.remove('active', 'flowing', 'amber');
         statusText.textContent = currentLang === 'id' ? 'Status: Normal (Primary WAN Aktif)' : 'Status: Normal (Primary WAN Active)';
         statusDot.className = 'status-dot';
         log('BGP-DAEMON', 'Primary Link Restored. BGP Session Established to AS65001.', 'ok');
         log('MikroTik-CCR', 'Default Route reverted to Primary Gateway 203.0.113.1 (Metric 10).', 'info');
+        flashNode('mikrotik', 'green');
+        flashNode('ispPrimary', 'green');
+        setTimeout(() => linkPrimary.classList.remove('flowing'), 1500);
       }
     });
 
@@ -1645,13 +1836,20 @@ router bgp 65002
       isSimulating = true;
       clearLog();
       log('Host-01', 'Host sending SNMP Query to Monitoring Server (192.168.10.50)', 'info');
-      const path = [coords.client, coords.ruijie, coords.zabbix];
-      movePacket(path, 'vlan', 280, (leg) => {
+
+      const pathOut = [coords.client, coords.ruijie, coords.zabbix];
+      const linksOut = ['link-client-ruijie', 'link-ruijie-zabbix'];
+      const nodesOut = ['client', 'ruijie', 'zabbix'];
+
+      movePacket(pathOut, 'cyan', 'SNMP GET', linksOut, nodesOut, 260, (leg) => {
         if (leg === 0) log('Ruijie-SW', 'Untagged Ethernet Frame received on Port Gi0/1 (Assigned PVID: 10)', 'info');
         if (leg === 1) log('Zabbix-SRV', 'Frame received on eth0 (VLAN 10). SNMP Response generated.', 'ok');
       }, () => {
         const pathBack = [coords.zabbix, coords.ruijie, coords.client];
-        movePacket(pathBack, 'vlan', 240, null, () => {
+        const linksBack = ['link-ruijie-zabbix', 'link-client-ruijie'];
+        const nodesBack = ['zabbix', 'ruijie', 'client'];
+
+        movePacket(pathBack, 'cyan', 'SNMP REP', linksBack, nodesBack, 240, null, () => {
           log('Host-01', 'SNMP Response: Zabbix Server Status [UP] - 0 packet loss.', 'ok');
           isSimulating = false;
         });
@@ -1663,12 +1861,23 @@ router bgp 65002
       if (isSimulating) return;
       isSimulating = true;
       clearLog();
+      if (dropEffect) dropEffect.style.opacity = '0';
+
       log('Host-01', 'Attempting unauthorized SSH connection to WAN IP: 203.0.113.1:22', 'warn');
+
       const path = [coords.client, coords.ruijie, coords.huawei, coords.juniper];
-      movePacket(path, 'drop', 220, (leg) => {
+      const links = ['link-client-ruijie', 'link-ruijie-huawei', 'link-huawei-juniper'];
+      const nodes = ['client', 'ruijie', 'huawei', 'juniper'];
+
+      movePacket(path, 'red', 'TCP :22', links, nodes, 220, (leg) => {
         if (leg === 2) log('Juniper-SRX', 'SECURITY POLICY MATCH: Policy DROP-UNAUTHORIZED-SSH (Port 22 / junos-ssh -> REJECT)', 'err');
       }, () => {
-        log('Juniper-SRX', '[REJECT] Flow: trust:192.168.10.101:54322 -> untrust:203.0.113.1:22 (TCP-RST sent)', 'err');
+        if (dropEffect) {
+          dropEffect.style.opacity = '1';
+          setTimeout(() => { dropEffect.style.opacity = '0'; }, 2000);
+        }
+        flashNode('juniper', 'red');
+        log('Juniper-SRX', '[REJECT] Flow: trust:192.168.10.101:54322 -> untrust:203.0.113.1:22 (TCP-RST sent / Session Destroyed)', 'err');
         log('Host-01', 'ssh: connect to host 203.0.113.1 port 22: Connection refused / Rejected by Juniper Junos Policy.', 'err');
         isSimulating = false;
       });
@@ -1678,12 +1887,14 @@ router bgp 65002
     document.getElementById('btnReset').addEventListener('click', () => {
       isFailover = false;
       isSimulating = false;
-      linkPrimary.classList.remove('down');
+      linkPrimary.classList.remove('down', 'flowing');
       linkPrimary.classList.add('active');
-      linkBackup.classList.remove('active');
+      linkBackup.classList.remove('active', 'flowing', 'amber');
       statusText.textContent = currentLang === 'id' ? 'Status: Normal (Primary WAN Aktif)' : 'Status: Normal (Primary WAN Active)';
       statusDot.className = 'status-dot';
-      packetDot.style.opacity = '0';
+      if (packetGroup) packetGroup.style.opacity = '0';
+      if (dropEffect) dropEffect.style.opacity = '0';
+      clearAllCableFlows();
       clearLog();
       log('SYS-RESET', 'Topology and links reset to default normal operational state.', 'ok');
     });
