@@ -752,137 +752,154 @@
         <div class="canvas-header">
           <span data-id="Enterprise Network Topology (Klik perangkat mana saja untuk membuka Script Config &amp; Modul Pembelajaran)" data-en="Enterprise Network Topology (Click any device to open Script Config &amp; Learning Module)">Enterprise Network Topology (Klik perangkat mana saja untuk membuka Script Config &amp; Modul Pembelajaran)</span>
           <span style="color:var(--accent); font-weight:700;">KLIK PERANGKAT 🔍</span>
-        </div>
-        <div class="canvas-body">
-          <svg viewBox="0 0 1080 360" className="topology-svg" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+        </di          <svg viewBox="0 0 1280 360" className="topology-svg" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
             <!-- 1. CABLE LINKS (RENDERED UNDERNEATH) -->
             <!-- Link 1: Host-01 -> Ruijie Switch -->
-            <line x1="101" y1="273" x2="319" y2="273" class="link-line active" />
+            <line x1="92" y1="273" x2="295" y2="273" class="link-line active" />
 
             <!-- Link 2: Ruijie -> Zabbix -->
-            <line x1="319" y1="273" x2="319" y2="73" class="link-line active" />
+            <line x1="295" y1="273" x2="295" y2="73" class="link-line active" />
 
             <!-- Link 3: Ruijie -> Huawei Core -->
-            <line x1="319" y1="273" x2="539" y2="273" class="link-line active" />
+            <line x1="295" y1="273" x2="500" y2="273" class="link-line active" />
 
-            <!-- Link 4: Huawei Core -> MikroTik CCR -->
-            <line x1="539" y1="273" x2="759" y2="273" class="link-line active" />
+            <!-- Link 4: Huawei Core -> Juniper SRX -->
+            <line x1="500" y1="273" x2="705" y2="273" class="link-line active" />
 
-            <!-- Link 5: MikroTik CCR -> ISP Primary -->
-            <line x1="759" y1="273" x2="979" y2="73" class="link-line active" id="linkPrimary" />
+            <!-- Link 5: Juniper SRX -> MikroTik CCR -->
+            <line x1="705" y1="273" x2="910" y2="273" class="link-line active" />
 
-            <!-- Link 6: MikroTik CCR -> ISP Backup -->
-            <line x1="759" y1="273" x2="979" y2="273" class="link-line backup" id="linkBackup" />
+            <!-- Link 6: MikroTik CCR -> ISP Primary -->
+            <line x1="910" y1="273" x2="1125" y2="73" class="link-line active" id="linkPrimary" />
+
+            <!-- Link 7: MikroTik CCR -> ISP Backup -->
+            <line x1="910" y1="273" x2="1125" y2="273" class="link-line backup" id="linkBackup" />
 
             <!-- 2. INLINE COMPACT LINK BADGES (ZERO OVERFLOW / ZERO CLIPPING) -->
             <!-- Badge 1: VLAN 10 -->
             <g>
-              <rect x="179" y="263" width="60" height="20" rx="4" fill="#090d14" stroke="#38bdf8" stroke-width="1" />
-              <text x="209" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#38bdf8" font-weight="600" text-anchor="middle">VLAN 10</text>
+              <rect x="165" y="263" width="55" height="20" rx="4" fill="#090d14" stroke="#38bdf8" stroke-width="1" />
+              <text x="192.5" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#38bdf8" font-weight="600" text-anchor="middle">VLAN 10</text>
             </g>
 
             <!-- Badge 2: SNMP (Gi0/2) -->
             <g>
-              <rect x="279" y="163" width="80" height="20" rx="4" fill="#090d14" stroke="#f46800" stroke-width="1" />
-              <text x="319" y="176" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#f46800" font-weight="600" text-anchor="middle">SNMP · Gi0/2</text>
+              <rect x="255" y="163" width="80" height="20" rx="4" fill="#090d14" stroke="#f46800" stroke-width="1" />
+              <text x="295" y="176" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#f46800" font-weight="600" text-anchor="middle">SNMP · Gi0/2</text>
             </g>
 
             <!-- Badge 3: 802.1Q Trunk -->
             <g>
-              <rect x="397" y="263" width="64" height="20" rx="4" fill="#090d14" stroke="#38bdf8" stroke-width="1" />
-              <text x="429" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#38bdf8" font-weight="600" text-anchor="middle">802.1Q</text>
+              <rect x="370" y="263" width="55" height="20" rx="4" fill="#090d14" stroke="#38bdf8" stroke-width="1" />
+              <text x="397.5" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#38bdf8" font-weight="600" text-anchor="middle">802.1Q</text>
             </g>
 
-            <!-- Badge 4: 10.0.0.0/30 -->
+            <!-- Badge 4: 10.0.1.0/30 (Trust Uplink) -->
             <g>
-              <rect x="617" y="263" width="64" height="20" rx="4" fill="#090d14" stroke="#a3e635" stroke-width="1" />
-              <text x="649" y="276" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3e635" font-weight="600" text-anchor="middle">10.0.0.0/30</text>
+              <rect x="573" y="263" width="58" height="20" rx="4" fill="#090d14" stroke="#10b981" stroke-width="1" />
+              <text x="602" y="276" font-family="'JetBrains Mono', monospace" font-size="8" fill="#10b981" font-weight="600" text-anchor="middle">10.0.1.0/30</text>
             </g>
 
-            <!-- Badge 5: Primary WAN BGP -->
+            <!-- Badge 5: 10.0.0.0/30 (Untrust to CCR) -->
             <g>
-              <rect x="824" y="163" width="90" height="20" rx="4" fill="#090d14" stroke="#22c55e" stroke-width="1.2" />
-              <text x="869" y="176.5" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#22c55e" font-weight="700" text-anchor="middle">Primary (BGP)</text>
+              <rect x="778" y="263" width="58" height="20" rx="4" fill="#090d14" stroke="#a3e635" stroke-width="1" />
+              <text x="807" y="276" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3e635" font-weight="600" text-anchor="middle">10.0.0.0/30</text>
             </g>
 
-            <!-- Badge 6: Failover WAN -->
+            <!-- Badge 6: Primary WAN BGP -->
             <g>
-              <rect x="839" y="263" width="60" height="20" rx="4" fill="#090d14" stroke="#f59e0b" stroke-width="1" />
-              <text x="869" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#f59e0b" font-weight="600" text-anchor="middle">Failover</text>
+              <rect x="972" y="163" width="90" height="20" rx="4" fill="#090d14" stroke="#22c55e" stroke-width="1.2" />
+              <text x="1017.5" y="176.5" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#22c55e" font-weight="700" text-anchor="middle">Primary (BGP)</text>
+            </g>
+
+            <!-- Badge 7: Failover WAN -->
+            <g>
+              <rect x="985" y="263" width="60" height="20" rx="4" fill="#090d14" stroke="#f59e0b" stroke-width="1" />
+              <text x="1015" y="276" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#f59e0b" font-weight="600" text-anchor="middle">Failover</text>
             </g>
 
             <!-- 3. PACKET ANIMATION DOT -->
-            <circle id="packetDot" cx="101" cy="273" r="7" class="packet-dot" style="opacity:0;" />
+            <circle id="packetDot" cx="92" cy="273" r="7" class="packet-dot" style="opacity:0;" />
 
-            <!-- 4. NODES (SPACIOUS 142-146px WIDTH CARDS) -->
+            <!-- 4. NODES (SPACIOUS ENTERPRISE CARDS) -->
             <!-- Node 1: Host-01 -->
             <g class="node-group" data-device-id="client" data-name="Host-01 (Workstation)" data-ip="192.168.10.101/24" data-os="Linux Ubuntu 24.04" data-vlan="VLAN 10" data-role="Client Endpoint">
-              <rect x="30" y="240" width="142" height="66" class="node-bg" />
-              <rect x="38" y="254" width="34" height="34" class="node-icon-box" />
-              <text x="55" y="277" fill="#38bdf8" text-anchor="middle" font-size="16">💻</text>
-              <text x="78" y="261" class="node-name">Host-01</text>
-              <text x="78" y="276" class="node-ip">192.168.10.101</text>
-              <text x="78" y="291" class="node-tag" fill="#a3e635">VLAN 10</text>
+              <rect x="25" y="240" width="135" height="66" class="node-bg" />
+              <rect x="33" y="254" width="34" height="34" class="node-icon-box" />
+              <text x="50" y="277" fill="#38bdf8" text-anchor="middle" font-size="16">💻</text>
+              <text x="73" y="261" class="node-name">Host-01</text>
+              <text x="73" y="276" class="node-ip">192.168.10.101</text>
+              <text x="73" y="291" class="node-tag" fill="#a3e635">VLAN 10</text>
             </g>
 
             <!-- Node 2: Ruijie Access Switch -->
             <g class="node-group" data-device-id="ruijie" data-name="Ruijie Access Switch" data-ip="10.0.0.3" data-os="Ruijie RGOS" data-vlan="VLAN 10, 20" data-role="L2 Access & PoE Switch">
-              <rect x="246" y="240" width="146" height="66" class="node-bg" />
-              <rect x="254" y="254" width="34" height="34" class="node-icon-box" />
-              <text x="271" y="277" fill="#0066cc" text-anchor="middle" font-size="16">🔀</text>
-              <text x="294" y="261" class="node-name">Ruijie Switch</text>
-              <text x="294" y="276" class="node-ip">RG-NBS3100</text>
-              <text x="294" y="291" class="node-tag" fill="#38bdf8">VLAN 10/20</text>
+              <rect x="225" y="240" width="140" height="66" class="node-bg" />
+              <rect x="233" y="254" width="34" height="34" class="node-icon-box" />
+              <text x="250" y="277" fill="#0066cc" text-anchor="middle" font-size="16">🔀</text>
+              <text x="273" y="261" class="node-name">Ruijie Switch</text>
+              <text x="273" y="276" class="node-ip">RG-NBS3100</text>
+              <text x="273" y="291" class="node-tag" fill="#38bdf8">VLAN 10/20</text>
             </g>
 
             <!-- Node 3: NOC Zabbix Server -->
             <g class="node-group" data-device-id="zabbix" data-name="NOC Zabbix Server" data-ip="192.168.10.50/24" data-os="Debian 12 / Zabbix 7.0 LTS" data-vlan="VLAN 10" data-role="NOC Monitoring & SNMP">
-              <rect x="246" y="40" width="146" height="66" class="node-bg" />
-              <rect x="254" y="54" width="34" height="34" class="node-icon-box" />
-              <text x="271" y="77" fill="#f87171" text-anchor="middle" font-size="16">🖥️</text>
-              <text x="294" y="61" class="node-name">NOC Zabbix</text>
-              <text x="294" y="76" class="node-ip">192.168.10.50</text>
-              <text x="294" y="91" class="node-tag" fill="#f46800">SNMP Server</text>
+              <rect x="225" y="40" width="140" height="66" class="node-bg" />
+              <rect x="233" y="54" width="34" height="34" class="node-icon-box" />
+              <text x="250" y="77" fill="#f87171" text-anchor="middle" font-size="16">🖥️</text>
+              <text x="273" y="61" class="node-name">NOC Zabbix</text>
+              <text x="273" y="76" class="node-ip">192.168.10.50</text>
+              <text x="273" y="91" class="node-tag" fill="#f46800">SNMP Server</text>
             </g>
 
             <!-- Node 4: Huawei Core Switch -->
-            <g class="node-group" data-device-id="huawei" data-name="Huawei Core Switch" data-ip="10.0.0.2/30" data-os="Huawei VRP 8.0" data-vlan="VLAN 10, 20, 99" data-role="L3 Core & Inter-VLAN Routing">
-              <rect x="466" y="240" width="146" height="66" class="node-bg" />
-              <rect x="474" y="254" width="34" height="34" class="node-icon-box" />
-              <text x="491" y="277" fill="#e41e2b" text-anchor="middle" font-size="16">🏢</text>
-              <text x="514" y="261" class="node-name">Huawei Core</text>
-              <text x="514" y="276" class="node-ip">S5735-L (L3)</text>
-              <text x="514" y="291" class="node-tag" fill="#a3e635">10.0.0.2/30</text>
+            <g class="node-group" data-device-id="huawei" data-name="Huawei Core Switch" data-ip="10.0.1.1/30" data-os="Huawei VRP 8.0" data-vlan="VLAN 10, 20, 99" data-role="L3 Core & Inter-VLAN Routing">
+              <rect x="430" y="240" width="140" height="66" class="node-bg" />
+              <rect x="438" y="254" width="34" height="34" class="node-icon-box" />
+              <text x="455" y="277" fill="#e41e2b" text-anchor="middle" font-size="16">🏢</text>
+              <text x="478" y="261" class="node-name">Huawei Core</text>
+              <text x="478" y="276" class="node-ip">S5735-L (L3)</text>
+              <text x="478" y="291" class="node-tag" fill="#a3e635">10.0.1.1/30</text>
             </g>
 
-            <!-- Node 5: MikroTik Core Router -->
+            <!-- Node 5: Juniper SRX Gateway -->
+            <g class="node-group" data-device-id="juniper" data-name="Juniper SRX300 Gateway" data-ip="10.0.1.2/30 & 10.0.0.2/30" data-os="Junos OS 23.4R1" data-vlan="Trust / Untrust Zones" data-role="Next-Gen Firewall & Security">
+              <rect x="635" y="240" width="140" height="66" class="node-bg" />
+              <rect x="643" y="254" width="34" height="34" class="node-icon-box" />
+              <text x="660" y="277" fill="#10b981" text-anchor="middle" font-size="16">🌲</text>
+              <text x="683" y="261" class="node-name">Juniper SRX</text>
+              <text x="683" y="276" class="node-ip">SRX300 (Junos)</text>
+              <text x="683" y="291" class="node-tag" fill="#10b981">FW · Zone Sec</text>
+            </g>
+
+            <!-- Node 6: MikroTik Core Router -->
             <g class="node-group" data-device-id="mikrotik" data-name="MikroTik CCR Router" data-ip="10.0.0.1/30 & 203.0.113.2" data-os="RouterOS v7.15" data-vlan="BGP, NAT, OSPF" data-role="Edge BGP Gateway & Firewall">
-              <rect x="686" y="240" width="146" height="66" class="node-bg" />
-              <rect x="694" y="254" width="34" height="34" class="node-icon-box" />
-              <text x="711" y="277" fill="#cc0000" text-anchor="middle" font-size="16">🛡️</text>
-              <text x="734" y="261" class="node-name">MikroTik CCR</text>
-              <text x="734" y="276" class="node-ip">CCR2004-1G</text>
-              <text x="734" y="291" class="node-tag" fill="#f59e0b">BGP · NAT · FW</text>
+              <rect x="840" y="240" width="140" height="66" class="node-bg" />
+              <rect x="848" y="254" width="34" height="34" class="node-icon-box" />
+              <text x="865" y="277" fill="#cc0000" text-anchor="middle" font-size="16">🛡️</text>
+              <text x="888" y="261" class="node-name">MikroTik CCR</text>
+              <text x="888" y="276" class="node-ip">CCR2004-1G</text>
+              <text x="888" y="291" class="node-tag" fill="#f59e0b">BGP · NAT · FW</text>
             </g>
 
-            <!-- Node 6: ISP Primary -->
+            <!-- Node 7: ISP Primary -->
             <g class="node-group" data-device-id="ispPrimary" data-name="Primary ISP Gateway" data-ip="203.0.113.1 (AS65001)" data-os="BGP Core Gateway" data-vlan="Public WAN" data-role="Primary Upstream Gateway">
-              <rect x="906" y="40" width="146" height="66" class="node-bg" />
-              <rect x="914" y="54" width="34" height="34" class="node-icon-box" />
-              <text x="931" y="77" fill="#22c55e" text-anchor="middle" font-size="16">🌐</text>
-              <text x="954" y="61" class="node-name">ISP Primary</text>
-              <text x="954" y="76" class="node-ip">203.0.113.1</text>
-              <text x="954" y="91" class="node-tag" fill="#22c55e">WAN Active</text>
+              <rect x="1055" y="40" width="140" height="66" class="node-bg" />
+              <rect x="1063" y="54" width="34" height="34" class="node-icon-box" />
+              <text x="1080" y="77" fill="#22c55e" text-anchor="middle" font-size="16">🌐</text>
+              <text x="1103" y="61" class="node-name">ISP Primary</text>
+              <text x="1103" y="76" class="node-ip">203.0.113.1</text>
+              <text x="1103" y="91" class="node-tag" fill="#22c55e">WAN Active</text>
             </g>
 
-            <!-- Node 7: ISP Backup -->
+            <!-- Node 8: ISP Backup -->
             <g class="node-group" data-device-id="ispBackup" data-name="Secondary Backup ISP" data-ip="198.51.100.1 (AS65002)" data-os="Secondary Upstream Gateway" data-vlan="Public WAN" data-role="Redundant Backup Route">
-              <rect x="906" y="240" width="146" height="66" class="node-bg" />
-              <rect x="914" y="254" width="34" height="34" class="node-icon-box" />
-              <text x="931" y="277" fill="#f59e0b" text-anchor="middle" font-size="16">☁️</text>
-              <text x="954" y="261" class="node-name">ISP Backup</text>
-              <text x="954" y="276" class="node-ip">198.51.100.1</text>
-              <text x="954" y="291" class="node-tag" fill="#f59e0b">Standby WAN</text>
+              <rect x="1055" y="240" width="140" height="66" class="node-bg" />
+              <rect x="1063" y="254" width="34" height="34" class="node-icon-box" />
+              <text x="1080" y="277" fill="#f59e0b" text-anchor="middle" font-size="16">☁️</text>
+              <text x="1103" y="261" class="node-name">ISP Backup</text>
+              <text x="1103" y="276" class="node-ip">198.51.100.1</text>
+              <text x="1103" y="291" class="node-tag" fill="#f59e0b">Standby WAN</text>
             </g>
           </svg>
         </div>
@@ -1102,6 +1119,65 @@
             <li><strong>Port ether2:</strong> 198.51.100.2/30 (Connected to Backup ISP AS65002) - 10G Standby</li>
             <li><strong>Port sfp-sfpplus1:</strong> 10.0.0.1/30 (SFP+ 10Gbps to Huawei Core Switch)</li>
             <li><strong>Throughput:</strong> Up to 15 Gbps wire-speed forwarding with Hardware Offloading</li>
+          </ul>
+        `
+      },
+      juniper: {
+        name: 'Juniper SRX300 Services Gateway',
+        os: 'Junos OS 23.4R1-S1',
+        role_id: 'Next-Gen Firewall, Zone Security, IPsec VPN, IDP/IPS Filter',
+        role_en: 'Next-Gen Firewall, Zone Security, IPsec VPN, IDP/IPS Filter',
+        ip: '10.0.1.2/30 (Trust Uplink) & 10.0.0.2/30 (Untrust to CCR)',
+        vlan: 'Security Zones: trust (LAN), untrust (Edge), junos-host',
+        cli_title: 'Juniper Junos OS Production Configuration (CLI / Set Format)',
+        config: `# Juniper Junos OS Configuration Hierarchy (Set Format)
+# 1. Interface Configuration & IP Assignment
+set interfaces ge-0/0/0 description "Uplink to MikroTik Core Router (Untrust Zone)"
+set interfaces ge-0/0/0 unit 0 family inet address 10.0.0.2/30
+
+set interfaces ge-0/0/1 description "Downlink to Huawei Core Switch (Trust Zone)"
+set interfaces ge-0/0/1 unit 0 family inet address 10.0.1.2/30
+
+# 2. Security Zones & Interface Binding
+set security zones security-zone trust interfaces ge-0/0/1.0 host-inbound-traffic system-services all
+set security zones security-zone trust interfaces ge-0/0/1.0 host-inbound-traffic protocols all
+
+set security zones security-zone untrust interfaces ge-0/0/0.0 host-inbound-traffic system-services ping
+set security zones security-zone untrust interfaces ge-0/0/0.0 host-inbound-traffic protocols bgp
+
+# 3. Security Policy (Stateful Flow Inspection)
+set security policies from-zone trust to-zone untrust policy ALLOW-LAN-INTERNET match source-address any
+set security policies from-zone trust to-zone untrust policy ALLOW-LAN-INTERNET match destination-address any
+set security policies from-zone trust to-zone untrust policy ALLOW-LAN-INTERNET match application any
+set security policies from-zone trust to-zone untrust policy ALLOW-LAN-INTERNET then permit
+
+set security policies from-zone trust to-zone untrust policy DROP-UNAUTHORIZED-SSH match source-address any
+set security policies from-zone trust to-zone untrust policy DROP-UNAUTHORIZED-SSH match destination-address any
+set security policies from-zone trust to-zone untrust policy DROP-UNAUTHORIZED-SSH match application junos-ssh
+set security policies from-zone trust to-zone untrust policy DROP-UNAUTHORIZED-SSH then reject
+
+# 4. Static / Default Route to Core Edge
+set routing-options static route 0.0.0.0/0 next-hop 10.0.0.1
+set routing-options static route 192.168.10.0/24 next-hop 10.0.1.1
+
+# 5. Commit Candidate Configuration with Automatic Safety Rollback
+commit confirmed 5 comment "Deploy Enterprise Security Policies & Routing"`,
+        theory_id: `
+          <p><span class="badge-pill">Zone-based Security</span> <strong>Juniper SRX300</strong> memisahkan interface ke dalam <em>Security Zones</em> (misal: <code>trust</code> untuk internal LAN dan <code>untrust</code> untuk jalur keluar router). Semua traffic yang melintas antar-zone wajib diatur lewat Security Policy.</p>
+          <p><span class="badge-pill">Stateful Flow Engine</span> Junos memeriksa session flow paket secara stateful (SYN, ACK, FIN) dan melakukan deep packet inspection (DPI) untuk mencegah serangan cyber sebelum paket mencapai Core Edge.</p>
+          <p><span class="badge-pill">Commit Confirmed</span> Junos memiliki fitur keamanan unggulan <code>commit confirmed</code> yang otomatis melakukan rollback jika koneksi terputus saat konfigurasi remote dilakukan.</p>
+        `,
+        theory_en: `
+          <p><span class="badge-pill">Zone-based Architecture</span> <strong>Juniper SRX300</strong> segments network interfaces into distinct <em>Security Zones</em> (<code>trust</code> vs <code>untrust</code>). Inter-zone packet flows are governed strictly by stateful firewall policies.</p>
+          <p><span class="badge-pill">Flow-based Processing</span> Junos processes sessions through stateful hardware acceleration and IDP/IPS application filters before routing frames upstream.</p>
+          <p><span class="badge-pill">Commit Safety</span> The legendary <code>commit confirmed</code> mechanism guarantees automatic rollback protection against misconfigurations during remote maintenance.</p>
+        `,
+        specs: `
+          <ul>
+            <li><strong>Model:</strong> Juniper SRX300 Services Gateway (Octeon III Dual-Core 1GHz, 4GB RAM)</li>
+            <li><strong>Port ge-0/0/0:</strong> 10.0.0.2/30 (Connected to MikroTik CCR Core Router)</li>
+            <li><strong>Port ge-0/0/1:</strong> 10.0.1.2/30 (Connected to Huawei Core Switch)</li>
+            <li><strong>Firewall Performance:</strong> 1 Gbps stateful throughput, 300 Mbps IPsec VPN, 64,000 concurrent sessions</li>
           </ul>
         `
       },
@@ -1460,15 +1536,16 @@ router bgp 65002
       consoleBody.innerHTML = '';
     }
 
-    // Node coordinates on SVG viewBox 0 0 1080 360
+    // Node coordinates on SVG viewBox 0 0 1280 360
     const coords = {
-      client: { x: 101, y: 273 },
-      ruijie: { x: 319, y: 273 },
-      zabbix: { x: 319, y: 73 },
-      huawei: { x: 539, y: 273 },
-      mikrotik: { x: 759, y: 273 },
-      ispPrimary: { x: 979, y: 73 },
-      ispBackup: { x: 979, y: 273 }
+      client: { x: 92.5, y: 273 },
+      ruijie: { x: 295, y: 273 },
+      zabbix: { x: 295, y: 73 },
+      huawei: { x: 500, y: 273 },
+      juniper: { x: 705, y: 273 },
+      mikrotik: { x: 910, y: 273 },
+      ispPrimary: { x: 1125, y: 73 },
+      ispBackup: { x: 1125, y: 273 }
     };
 
     function movePacket(points, colorType, durationPerLeg, onLeg, onComplete) {
@@ -1519,17 +1596,18 @@ router bgp 65002
       const targetISP = isFailover ? coords.ispBackup : coords.ispPrimary;
       log('Host-01', `PING ${isFailover ? '198.51.100.1' : '203.0.113.1'}: 64 data bytes (ICMP Echo)`, 'info');
 
-      const outbound = [coords.client, coords.ruijie, coords.huawei, coords.mikrotik, targetISP];
-      movePacket(outbound, 'icmp', 220, (leg) => {
+      const outbound = [coords.client, coords.ruijie, coords.huawei, coords.juniper, coords.mikrotik, targetISP];
+      movePacket(outbound, 'icmp', 200, (leg) => {
         if (leg === 0) log('Ruijie-SW', 'Forwarding packet via 802.1Q Trunk (VLAN 10 Tagged)', 'info');
-        if (leg === 1) log('Huawei-Core', 'Inter-VLAN Route lookup -> Next-hop 10.0.0.1 (CCR Router)', 'info');
-        if (leg === 2) log('MikroTik-CCR', `NAT Masquerade -> Out Interface: ${isFailover ? 'ether2 (Backup)' : 'ether1 (Primary)'}`, 'ok');
-        if (leg === 3) log('ISP-Gateway', 'ICMP Echo Received. Generating Echo-Reply packet.', 'ok');
+        if (leg === 1) log('Huawei-Core', 'Inter-VLAN Route lookup -> Next-hop 10.0.1.2 (Juniper SRX)', 'info');
+        if (leg === 2) log('Juniper-SRX', 'Stateful Security Policy: trust -> untrust (Action: PERMIT)', 'ok');
+        if (leg === 3) log('MikroTik-CCR', `NAT Masquerade -> Out Interface: ${isFailover ? 'ether2 (Backup)' : 'ether1 (Primary)'}`, 'ok');
+        if (leg === 4) log('ISP-Gateway', 'ICMP Echo Received. Generating Echo-Reply packet.', 'ok');
       }, () => {
-        const inbound = [targetISP, coords.mikrotik, coords.huawei, coords.ruijie, coords.client];
-        movePacket(inbound, 'icmp', 190, null, () => {
-          log('Host-01', `64 bytes from ${isFailover ? '198.51.100.1' : '203.0.113.1'}: icmp_seq=1 ttl=58 time=7.82 ms`, 'ok');
-          log('Host-01', '--- Ping statistics: 1 packets transmitted, 1 received, 0% packet loss (RTT avg=7.82ms) ---', 'ok');
+        const inbound = [targetISP, coords.mikrotik, coords.juniper, coords.huawei, coords.ruijie, coords.client];
+        movePacket(inbound, 'icmp', 180, null, () => {
+          log('Host-01', `64 bytes from ${isFailover ? '198.51.100.1' : '203.0.113.1'}: icmp_seq=1 ttl=57 time=8.14 ms`, 'ok');
+          log('Host-01', '--- Ping statistics: 1 packets transmitted, 1 received, 0% packet loss (RTT avg=8.14ms) ---', 'ok');
           isSimulating = false;
         });
       });
@@ -1584,12 +1662,12 @@ router bgp 65002
       isSimulating = true;
       clearLog();
       log('Host-01', 'Attempting unauthorized SSH connection to WAN IP: 203.0.113.1:22', 'warn');
-      const path = [coords.client, coords.ruijie, coords.huawei, coords.mikrotik];
+      const path = [coords.client, coords.ruijie, coords.huawei, coords.juniper];
       movePacket(path, 'drop', 220, (leg) => {
-        if (leg === 2) log('MikroTik-CCR', 'FIREWALL FILTER: Checking Chain=FORWARD, Dst-Port=22, Action=DROP', 'warn');
+        if (leg === 2) log('Juniper-SRX', 'SECURITY POLICY MATCH: Policy DROP-UNAUTHORIZED-SSH (Port 22 / junos-ssh -> REJECT)', 'err');
       }, () => {
-        log('MikroTik-CCR', '[DROP] IN=vlan10 OUT=ether1 SRC=192.168.10.101 DST=203.0.113.1 PROTO=TCP DPT=22', 'err');
-        log('Host-01', 'ssh: connect to host 203.0.113.1 port 22: Connection refused / Dropped by Firewall Rule.', 'err');
+        log('Juniper-SRX', '[REJECT] Flow: trust:192.168.10.101:54322 -> untrust:203.0.113.1:22 (TCP-RST sent)', 'err');
+        log('Host-01', 'ssh: connect to host 203.0.113.1 port 22: Connection refused / Rejected by Juniper Junos Policy.', 'err');
         isSimulating = false;
       });
     });
