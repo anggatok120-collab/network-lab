@@ -32,7 +32,7 @@ Interactive web-based **Enterprise Network Topology & Packet Tracer Simulator** 
 
 ## 🚀 Live Demo & Portfolios
 
-- **Network Lab (This Project)**: [anggot.biz.id](https://anggot.biz.id)
+- **Network Lab (This Project)**: [lab.anggatok.my.id](https://lab.anggatok.my.id)
 - **Main Portfolio**: [anggatok.my.id](https://anggatok.my.id)
 - **Terminal Portfolio**: [portfolio.anggatok.my.id](https://portfolio.anggatok.my.id)
 
